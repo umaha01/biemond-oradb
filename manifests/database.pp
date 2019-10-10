@@ -131,7 +131,7 @@ define oradb::database(
   Optional[Integer] $timeout                                      = 0,
 )
 {
-
+  v_java_options="unset _JAVA_OPTIONS"
   $supported_db_kernels = join( lookup('oradb::kernels'), '|')
   if ( $::kernel in $supported_db_kernels == false){
     fail("Unrecognized operating system, please use it on a ${supported_db_kernels} host")
@@ -299,8 +299,9 @@ define oradb::database(
         $command_storage = ''
       }
 
-      $command = "${command_pre} ${command_storage} ${command_data_file} ${command_var} ${command_init} ${command_nodes} ${elevation_suffix}"
-
+      #$command = "${command_pre} ${command_storage} ${command_data_file} ${command_var} ${command_init} ${command_nodes} ${elevation_suffix}"
+      $command = "${v_java_options} && ${command_pre} ${command_storage} ${command_data_file} ${command_var} ${command_init} ${command_nodes} ${elevation_suffix}"
+      
     } else {
       if ( $version in ['12.2','18.3','19.3']) {
         $command = "${elevation_prefix}${oracle_home}/bin/dbca -silent -createDatabase -responseFile ${download_dir}/database_${sanitized_title}.rsp${elevation_suffix}"
