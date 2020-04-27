@@ -263,10 +263,7 @@ define oradb::database(
       if ( $version == '11.2' or $container_database == false ) {
         $command_pre = "${elevation_prefix}${oracle_home}/bin/dbca -silent -createDatabase -templateName ${templatename} -gdbname ${globaldb_name} -sid ${db_name} -characterSet ${character_set} -responseFile NO_VALUE -sysPassword ${sys_password} -systemPassword ${system_password} -dbsnmpPassword ${db_snmp_password} -asmsnmpPassword ${asm_snmp_password} -emConfiguration ${em_configuration} "
       } else {
-        #delete#$command_pre = "${elevation_prefix}${oracle_home}/bin/dbca -silent -createDatabase -templateName ${templatename} -gdbname ${globaldb_name} -sid ${db_name} -characterSet ${character_set} -createAsContainerDatabase ${container_database} -responseFile NO_VALUE -sysPassword ${sys_password} -systemPassword ${system_password} -dbsnmpPassword ${db_snmp_password} -asmsnmpPassword ${asm_snmp_password} -emConfiguration ${em_configuration} "
-        #delete#$command_pre = "${elevation_prefix}${oracle_home}/bin/dbca -silent -createDatabase -templateName ${templatename} -gdbname ${globaldb_name} -sid ${db_name} -characterSet ${character_set} -nationalcharacterSet ${nationalcharacter_set} -createAsContainerDatabase ${container_database} -responseFile NO_VALUE -sysPassword ${sys_password} -systemPassword ${system_password} -dbsnmpPassword ${db_snmp_password} -asmsnmpPassword ${asm_snmp_password} -emConfiguration ${em_configuration} "
-        #delete#$command_pre = "${elevation_prefix}${oracle_home}/bin/dbca -silent -createDatabase -templateName ${templatename} -gdbname ${globaldb_name} -sid ${db_name} -characterSet ${character_set} -nationalcharacterSet ${nationalcharacter_set} -createAsContainerDatabase ${container_database} -responseFile NO_VALUE -sysPassword ${sys_password} -systemPassword ${system_password} -dbsnmpPassword ${db_snmp_password} -asmsnmpPassword ${asm_snmp_password} -emConfiguration ${em_configuration} -initparams -totalMemory 6000"
-        $command_pre = "${elevation_prefix}${oracle_home}/bin/dbca -silent -createDatabase -templateName ${templatename} -gdbname ${globaldb_name} -sid ${db_name} -characterSet ${character_set} -nationalcharacterSet ${nationalcharacter_set} -createAsContainerDatabase ${container_database} -responseFile NO_VALUE -sysPassword ${sys_password} -systemPassword ${system_password} -dbsnmpPassword ${db_snmp_password} -asmsnmpPassword ${asm_snmp_password} -emConfiguration ${em_configuration} -automaticMemoryManagement $automatic_memory_management"
+        $command_pre = "${elevation_prefix}${oracle_home}/bin/dbca -silent -createDatabase -templateName ${templatename} -gdbname ${globaldb_name} -sid ${db_name} -characterSet ${character_set} -createAsContainerDatabase ${container_database} -responseFile NO_VALUE -sysPassword ${sys_password} -systemPassword ${system_password} -dbsnmpPassword ${db_snmp_password} -asmsnmpPassword ${asm_snmp_password} -emConfiguration ${em_configuration} "
       }
 
       if ( $template_variables != undef) {
@@ -299,8 +296,13 @@ define oradb::database(
         $command_storage = ''
       }
 
-      $command = "${command_pre} ${command_storage} ${command_data_file} ${command_var} ${command_init} ${command_nodes} ${elevation_suffix}"
-      #delete#$command = "${v_java_options} && ${command_pre} ${command_storage} ${command_data_file} ${command_var} ${command_init} ${command_nodes} ${elevation_suffix}"
+      if ( $automatic_memory_management == false ) {
+        $command_amm = '-automaticMemoryManagement false'
+      } else {
+        $command_amm = ''
+      }
+
+      $command = "${command_pre} ${command_amm} ${command_storage} ${command_data_file} ${command_var} ${command_init} ${command_nodes} ${elevation_suffix}"
       
     } else {
       if ( $version in ['12.2','18.3','19.3']) {
