@@ -35,7 +35,10 @@ Puppet::Type.type(:db_opatch).provide(:db_opatch) do
         end
       else
         if action == :present
-          command = "#{oracle_product_home_dir}/OPatch/opatchauto apply #{extracted_patch_dir} #{ocmrf} -oh #{oracle_product_home_dir}"
+          bundle_sub_patch_id_extract = resource[:bundle_sub_patch_id]
+          extracted_patch_dir_base=extracted_patch_dir.sub!("#{bundle_sub_patch_id_extract}", "")
+          #command = "#{oracle_product_home_dir}/OPatch/opatchauto apply #{extracted_patch_dir} #{ocmrf} -oh #{oracle_product_home_dir}"
+          command = "#{oracle_product_home_dir}/OPatch/opatchauto apply #{extracted_patch_dir_base} #{ocmrf} -oh #{oracle_product_home_dir}"
         else
           command = "#{oracle_product_home_dir}/OPatch/opatchauto rollback #{extracted_patch_dir} #{ocmrf} -oh #{oracle_product_home_dir}"
         end
