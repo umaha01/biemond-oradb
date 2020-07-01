@@ -89,6 +89,8 @@ def get_orainst_products(path)
             # skip EM agent
           elsif str.include? 'OraPlaceHolderDummyHome'
             # skip EM agent
+          elsif str.include? 'clients'
+            # skip Oracle Client
           else
             home = str.gsub('/', '_').gsub("\\", '_').gsub('c:', '_c').gsub('d:', '_d').gsub('e:', '_e')
             opatchver = get_opatch_version(str)
