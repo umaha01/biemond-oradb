@@ -89,7 +89,7 @@ def get_orainst_products(path)
             # skip EM agent
           elsif str.include? 'OraPlaceHolderDummyHome'
             # skip EM agent
-          elsif str.include? 'clients'
+          elsif str.include? '/appl/clients/'
             # skip Oracle Client
           else
             home = str.gsub('/', '_').gsub("\\", '_').gsub('c:', '_c').gsub('d:', '_d').gsub('e:', '_e')
